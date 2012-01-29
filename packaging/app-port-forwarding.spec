@@ -15,7 +15,7 @@ Requires: app-base
 Requires: app-network
 
 %description
-This is the description for port forwarding...
+The Port Forwarding app makes it possible to manage remote access to systems on your local network.
 
 %package core
 Summary: Port Forwarding - APIs and install
@@ -26,7 +26,7 @@ Requires: app-firewall-core
 Requires: app-network-core
 
 %description core
-This is the description for port forwarding...
+The Port Forwarding app makes it possible to manage remote access to systems on your local network.
 
 This package provides the core API and libraries.
 
