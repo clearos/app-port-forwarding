@@ -44,7 +44,7 @@ $this->lang->load('base');
 $headers = array(
     lang('firewall_nickname'),
     lang('firewall_protocol'),
-    lang('base_from'),
+    lang('port_forwarding_from_to'),
     lang('firewall_ip_address'),
 );
 
