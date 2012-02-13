@@ -44,7 +44,8 @@ $this->lang->load('base');
 $headers = array(
     lang('firewall_nickname'),
     lang('firewall_protocol'),
-    lang('port_forwarding_from_to'),
+    lang('firewall_from_port'),
+    lang('firewall_to_port'),
     lang('firewall_ip_address'),
 );
 
@@ -76,6 +77,7 @@ foreach ($ports as $rule) {
         $rule['name'],
         $rule['protocol_name'],
         $rule['from_port'],
+        $rule['to_port'],
         $rule['to_ip'],
     );
 
@@ -102,6 +104,7 @@ foreach ($ranges as $rule) {
     $item['details'] = array(
         $rule['name'],
         $rule['protocol_name'],
+        $rule['low_port'] . ':' . $rule['high_port'],
         $rule['low_port'] . ':' . $rule['high_port'],
         $rule['to_ip']
     );
