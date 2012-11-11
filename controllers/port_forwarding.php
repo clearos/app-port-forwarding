@@ -392,7 +392,7 @@ class Port_Forwarding extends ClearOS_Controller
         try {
             $this->load->library('port_forwarding/Port_Forwarding');
 
-            $this->port_forwarding->set_port_range_state(TRUE, $protocol, $low_port, $high_port, $to);
+            $this->port_forwarding->set_port_range_state(TRUE, $protocol, $low_port, $high_port, $ip);
             $this->port_forwarding->reset(TRUE);
 
             $this->page->set_status_enabled();
