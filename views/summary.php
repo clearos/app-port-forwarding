@@ -118,9 +118,12 @@ foreach ($ranges as $rule) {
 
 sort($items);
 
+$options['default_rows'] = 50;
+
 echo summary_table(
     lang('port_forwarding_port_forwarding'),
     $anchors,
     $headers,
-    $items
+    $items, 
+    $options
 );
