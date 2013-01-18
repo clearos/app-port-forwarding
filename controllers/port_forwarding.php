@@ -7,7 +7,7 @@
  * @package    Port_Forwarding
  * @subpackage Controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2013 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -40,7 +40,7 @@
  * @package    Port_Forwarding
  * @subpackage Controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2013 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -64,6 +64,7 @@ class Port_Forwarding extends ClearOS_Controller
         try {
             $data['ports'] = $this->port_forwarding->get_ports();
             $data['ranges'] = $this->port_forwarding->get_port_ranges();
+            $data['pptp'] = $this->port_forwarding->get_pptp_server();
         } catch (Exception $e) {
             $this->page->view_exception($e);
             return;
@@ -178,7 +179,7 @@ class Port_Forwarding extends ClearOS_Controller
         $data['services'] = array();
 
         foreach ($services as $service)
-            if (($service !== 'IPsec') && ($service !== 'PPTP'))
+            if ($service !== 'IPsec')
                 $data['services'][] = $service;
 
         // Load the views

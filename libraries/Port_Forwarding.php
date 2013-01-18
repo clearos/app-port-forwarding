@@ -7,7 +7,7 @@
  * @package    Port_Forwarding
  * @subpackage Libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2004-2011 ClearFoundation
+ * @copyright  2004-2013 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -81,7 +81,7 @@ clearos_load_library('base/Validation_Exception');
  * @package    Port_Forwarding
  * @subpackage Libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2004-2011 ClearFoundation
+ * @copyright  2004-2013 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -191,21 +191,22 @@ class Port_Forwarding extends Firewall
         Validation_Exception::is_valid($this->validate_service($service));
         Validation_Exception::is_valid($this->validate_address($to_ip));
 
-        if ($service == 'IPsec') {
+        if ($service == 'IPsec')
             throw new Engine_Exception(lang('firewall_feature_is_not_supported'));
-        } else if ($service == 'PPTP') {
-            throw new Engine_Exception(lang('firewall_feature_is_not_supported'));
-        }
 
-        $ports = $this->get_ports_list();
-
-        foreach ($ports as $port_info) {
-            if ($port_info[3] == $service) {
-                if (preg_match("/:/", $port_info[2])) {
-                    $ports = explode(":", $port_info[2]);
-                    $this->add_port_range($name, $port_info[1], $ports[0], $ports[1], $to_ip);
-                } else {
-                    $this->add_port($name, $port_info[1], $port_info[2], $port_info[2], $to_ip);
+        if ($service == 'PPTP') {
+            $this->_set_pptp_server($to_ip);
+        } else {
+            $ports = $this->get_ports_list();
+    
+            foreach ($ports as $port_info) {
+                if ($port_info[3] == $service) {
+                    if (preg_match("/:/", $port_info[2])) {
+                        $ports = explode(":", $port_info[2]);
+                        $this->add_port_range($name, $port_info[1], $ports[0], $ports[1], $to_ip);
+                    } else {
+                        $this->add_port($name, $port_info[1], $port_info[2], $port_info[2], $to_ip);
+                    }
                 }
             }
         }
@@ -226,6 +227,11 @@ class Port_Forwarding extends Firewall
     public function delete_port($protocol, $from_port, $to_port, $to_ip)
     {
         clearos_profile(__METHOD__, __LINE__);
+
+        if ($protocol != 'PPTP') {
+            $this->_set_pptp_server('');
+            return;
+        }
 
         $rule = new Rule();
 
@@ -293,7 +299,7 @@ class Port_Forwarding extends Firewall
             if (strstr($rule->get_parameter(), ":"))
                 continue;
 
-            if (!($rule->get_flags() & Rule::FORWARD))
+            if ( !($rule->get_flags() & Rule::FORWARD) && !($rule->get_flags() & Rule::PPTP_FORWARD))
                 continue;
 
             if ($rule->get_flags() & (Rule::WIFI | Rule::CUSTOM))
@@ -306,9 +312,16 @@ class Port_Forwarding extends Firewall
             $info['protocol'] = $rule->get_protocol();
             $info['protocol_name'] = $rule->get_protocol_name();
             $info['to_ip'] = $rule->get_address();
-            $info['to_port'] = $rule->get_port();
-            $info['from_port'] = $rule->get_parameter();
             $info['service'] = $this->lookup_service($info['protocol'], $info['to_port']);
+
+            // The 1723 is a bit weird, but it makes end users happier
+            if ($rule->get_flags() & Rule::PPTP_FORWARD) {
+                $info['to_port'] = '1723';
+                $info['from_port'] = '1723';
+            } else {
+                $info['to_port'] = $rule->get_port();
+                $info['from_port'] = $rule->get_parameter();
+            }
 
             $port_list[] = $info;
         }
@@ -409,10 +422,15 @@ class Port_Forwarding extends Firewall
     {
         clearos_profile(__METHOD__, __LINE__);
 
+        if ($protocol != 'PPTP') {
+            $this->_set_pptp_server_state($state, $to_ip);
+            return;
+        }
+
         Validation_Exception::is_valid($this->validate_protocol($protocol));
+        Validation_Exception::is_valid($this->validate_address($to_ip));
         Validation_Exception::is_valid($this->validate_port($from_port));
         Validation_Exception::is_valid($this->validate_port($to_port));
-        Validation_Exception::is_valid($this->validate_address($to_ip));
 
         $rule = new Rule();
 
@@ -477,6 +495,10 @@ class Port_Forwarding extends Firewall
         $this->add_rule($rule);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////
+    // P R I V A T E   M E T H O D S
+    ///////////////////////////////////////////////////////////////////////////////
+
     /**
      * Sets PPTP forwarding to the given IP address.
      *
@@ -486,12 +508,13 @@ class Port_Forwarding extends Firewall
      * @throws Engine_Exception
      */
 
-    public function set_pptp_server($ip)
+    protected function _set_pptp_server($ip)
     {
         clearos_profile(__METHOD__, __LINE__);
 
         $rule = new Rule();
 
+        $rule->set_name('PPTP');
         $rule->set_port(1723);
         $rule->set_protocol(Firewall::PROTOCOL_GRE);
         $rule->set_flags(Rule::PPTP_FORWARD | Rule::ENABLED);
@@ -521,7 +544,7 @@ class Port_Forwarding extends Firewall
      * @throws Engine_Exception
      */
 
-    public function set_pptp_server_state($state, $ip)
+    protected function _set_pptp_server_state($state, $ip)
     {
         clearos_profile(__METHOD__, __LINE__);
 
