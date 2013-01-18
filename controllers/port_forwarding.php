@@ -73,7 +73,8 @@ class Port_Forwarding extends ClearOS_Controller
         // Load views
         //-----------
 
-        // FIXME: $options['type'] = 'report';
+        $options['type'] = MY_Page::TYPE_WIDE_CONFIGURATION;
+
         $this->page->view_form('port_forwarding/summary', $data, lang('port_forwarding_app_name'), $options);
     }
 
