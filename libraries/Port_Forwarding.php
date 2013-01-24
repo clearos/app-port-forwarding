@@ -89,7 +89,7 @@ clearos_load_library('base/Validation_Exception');
 class Port_Forwarding extends Firewall
 {
     /**
-     * Port_Forwarding constructor.
+     * Port forwarding constructor.
      */
 
     public function __construct()
@@ -133,7 +133,7 @@ class Port_Forwarding extends Firewall
         $rule->set_address($to_ip);
         $rule->set_flags(Rule::FORWARD | Rule::ENABLED);
 
-        $this->add_rule($rule);
+        $this->_add_rule($rule);
     }
 
     /**
@@ -169,7 +169,7 @@ class Port_Forwarding extends Firewall
         $rule->set_address($to_ip);
         $rule->set_flags(Rule::FORWARD | Rule::ENABLED);
 
-        $this->add_rule($rule);
+        $this->_add_rule($rule);
     }
 
     /**
@@ -197,7 +197,7 @@ class Port_Forwarding extends Firewall
         if ($service == 'PPTP') {
             $this->_set_pptp_server($to_ip);
         } else {
-            $ports = $this->get_ports_list();
+            $ports = $this->_get_ports_list();
     
             foreach ($ports as $port_info) {
                 if ($port_info[3] == $service) {
@@ -213,7 +213,7 @@ class Port_Forwarding extends Firewall
     }
 
     /**
-     * Delete a port from the forward allow list.
+     * Deletes a port from the forward allow list.
      *
      * @param string  $protocol  protocol
      * @param integer $from_port from port
@@ -241,11 +241,11 @@ class Port_Forwarding extends Firewall
         $rule->set_parameter($from_port);
         $rule->set_flags(Rule::FORWARD);
 
-        $this->delete_rule($rule);
+        $this->_delete_rule($rule);
     }
 
     /**
-     * Delete a port range from the forward range allow list.
+     * Deletes a port range from the forward range allow list.
      *
      * @param string  $protocol  protocol
      * @param integer $low_port  low port number
@@ -267,7 +267,7 @@ class Port_Forwarding extends Firewall
         $rule->set_parameter("$low_port:$high_port");
         $rule->set_flags(Rule::FORWARD);
 
-        $this->delete_rule($rule);
+        $this->_delete_rule($rule);
     }
 
     /**
@@ -293,7 +293,7 @@ class Port_Forwarding extends Firewall
 
         $port_list = array();
 
-        $rules = $this->get_rules();
+        $rules = $this->_get_rules();
 
         foreach ($rules as $rule) {
             if (strstr($rule->get_parameter(), ":"))
@@ -312,7 +312,7 @@ class Port_Forwarding extends Firewall
             $info['protocol'] = $rule->get_protocol();
             $info['protocol_name'] = $rule->get_protocol_name();
             $info['to_ip'] = $rule->get_address();
-            $info['service'] = $this->lookup_service($info['protocol'], $info['to_port']);
+            $info['service'] = $this->_lookup_service($info['protocol'], $info['to_port']);
 
             // The 1723 is a bit weird, but it makes end users happier
             if ($rule->get_flags() & Rule::PPTP_FORWARD) {
@@ -350,7 +350,7 @@ class Port_Forwarding extends Firewall
 
         $port_list = array();
 
-        $rules = $this->get_rules();
+        $rules = $this->_get_rules();
 
         foreach ($rules as $rule) {
             if (!strstr($rule->get_parameter(), ":"))
@@ -389,7 +389,7 @@ class Port_Forwarding extends Firewall
     {
         clearos_profile(__METHOD__, __LINE__);
 
-        $rules = $this->get_rules();
+        $rules = $this->_get_rules();
 
         $info = array();
 
@@ -406,7 +406,7 @@ class Port_Forwarding extends Firewall
     }
 
     /**
-     * Enable/disable a port from the forward allow list.
+     * Sets state for a port from the forward allow list.
      *
      * @param string  $state     state
      * @param string  $protocol  protocol
@@ -422,7 +422,7 @@ class Port_Forwarding extends Firewall
     {
         clearos_profile(__METHOD__, __LINE__);
 
-        if ($protocol != 'PPTP') {
+        if ($protocol == 'GRE') {
             $this->_set_pptp_server_state($state, $to_ip);
             return;
         }
@@ -440,21 +440,21 @@ class Port_Forwarding extends Firewall
         $rule->set_parameter($from_port);
         $rule->set_flags(Rule::FORWARD);
 
-        if (!($rule = $this->find_rule($rule)))
+        if (!($rule = $this->_find_rule($rule)))
             return;
 
-        $this->delete_rule($rule);
+        $this->_delete_rule($rule);
 
         if ($state)
             $rule->enable();
         else
             $rule->disable();
 
-        $this->add_rule($rule);
+        $this->_add_rule($rule);
     }
 
     /**
-     * Enable/disable a port range from the forward range allow list.
+     * Sets state for a port range from the forward range allow list.
      *
      * @param string  $state     state
      * @param string  $protocol  protocol
@@ -482,17 +482,17 @@ class Port_Forwarding extends Firewall
         $rule->set_parameter("$low_port:$high_port");
         $rule->set_flags(Rule::FORWARD);
 
-        if (!($rule = $this->find_rule($rule)))
+        if (!($rule = $this->_find_rule($rule)))
             return;
 
-        $this->delete_rule($rule);
+        $this->_delete_rule($rule);
 
         if ($state)
             $rule->enable();
         else
             $rule->disable();
 
-        $this->add_rule($rule);
+        $this->_add_rule($rule);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -525,12 +525,12 @@ class Port_Forwarding extends Firewall
 
         if (strlen($oldip)) {
             $rule->set_address($oldip);
-            $this->delete_rule($rule);
+            $this->_delete_rule($rule);
         }
 
         if (strlen($ip)) {
             $rule->set_address($ip);
-            $this->add_rule($rule);
+            $this->_add_rule($rule);
         }
     }
 
@@ -557,16 +557,16 @@ class Port_Forwarding extends Firewall
         $rule->set_flags(Rule::PPTP_FORWARD);
         $rule->set_address($ip);
 
-        if (!($rule = $this->find_rule($rule)))
+        if (!($rule = $this->_find_rule($rule)))
             return;
 
-        $this->delete_rule($rule);
+        $this->_delete_rule($rule);
 
         if ($state)
             $rule->enable();
         else
             $rule->disable();
 
-        $this->add_rule($rule);
+        $this->_add_rule($rule);
     }
 }
