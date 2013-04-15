@@ -228,7 +228,7 @@ class Port_Forwarding extends Firewall
     {
         clearos_profile(__METHOD__, __LINE__);
 
-        if ($protocol != 'PPTP') {
+        if (($protocol == 'PPTP') || ($protocol == 'GRE')) {
             $this->_set_pptp_server('');
             return;
         }
