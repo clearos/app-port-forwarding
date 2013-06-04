@@ -121,10 +121,9 @@ class Port_Forwarding extends ClearOS_Controller
             // TODO - Firewall class needs fixing for validating port and port ranges
             // For now, since adding a range seems intuitive to have a separator, make sure
             // entry is just a single port.
-            if (!preg_match('/\d+/', $this->input->post('range_start')) || !preg_match('/\d+/', $this->input->post('range_end'))) {
-                $this->page->set_message(lang('firewall_port_invalid'), 'warning');
-                $this->form_validation->set_policy('fail', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
-                $is_action = FALSE;
+            if (!preg_match('/^\d+$/', $this->input->post('range_start')) || !preg_match('/^\d+$/', $this->input->post('range_end'))) {
+                $this->page->set_message(lang('port_forwarding_port_range_invalid'), 'warning');
+                redirect('/port_forwarding/add');
             }
                 
         }
