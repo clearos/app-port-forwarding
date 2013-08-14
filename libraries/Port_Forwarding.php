@@ -192,7 +192,7 @@ class Port_Forwarding extends Firewall
         Validation_Exception::is_valid($this->validate_address($to_ip));
 
         if ($service == 'IPsec')
-            throw new Engine_Exception(lang('firewall_feature_is_not_supported'));
+            throw new Engine_Exception(lang('port_forwarding_feature_is_not_supported'));
 
         if ($service == 'PPTP') {
             $this->_set_pptp_server($to_ip);

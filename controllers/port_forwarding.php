@@ -122,7 +122,7 @@ class Port_Forwarding extends ClearOS_Controller
             // For now, since adding a range seems intuitive to have a separator, make sure
             // entry is just a single port.
             if (!preg_match('/^\d+$/', $this->input->post('range_start')) || !preg_match('/^\d+$/', $this->input->post('range_end'))) {
-                $this->page->set_message(lang('port_forwarding_port_range_invalid'), 'warning');
+                $this->page->set_message(lang('port_forwarding_port_range_warning'), 'warning');
                 redirect('/port_forwarding/add');
             }
                 
