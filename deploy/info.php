@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'port_forwarding';
-$app['version'] = '1.4.36';
+$app['version'] = '1.4.37';
 $app['release'] = '1';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
@@ -31,7 +31,7 @@ $app['requires'] = array(
 
 $app['core_requires'] = array(
     'app-firewall-core >= 1:1.4.15',
-    'app-network-core',
+    'app-network-core >= 1:1.5.1',
 );
 
 $app['delete_dependency'] = array(

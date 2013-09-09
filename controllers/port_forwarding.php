@@ -56,6 +56,7 @@ class Port_Forwarding extends ClearOS_Controller
     function index()
     {
         $this->load->library('port_forwarding/Port_Forwarding');
+        $this->load->library('network/Network');
         $this->lang->load('port_forwarding');
 
         // Load view data
@@ -65,6 +66,7 @@ class Port_Forwarding extends ClearOS_Controller
             $data['ports'] = $this->port_forwarding->get_ports();
             $data['ranges'] = $this->port_forwarding->get_port_ranges();
             $data['pptp'] = $this->port_forwarding->get_pptp_server();
+            $data['network_mode'] = $this->network->get_mode();
         } catch (Exception $e) {
             $this->page->view_exception($e);
             return;

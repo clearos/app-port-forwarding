@@ -1,7 +1,7 @@
 
 Name: app-port-forwarding
 Epoch: 1
-Version: 1.4.36
+Version: 1.4.37
 Release: 1%{dist}
 Summary: Port Forwarding
 License: GPLv3
@@ -21,7 +21,7 @@ License: LGPLv3
 Group: ClearOS/Libraries
 Requires: app-base-core
 Requires: app-firewall-core >= 1:1.4.15
-Requires: app-network-core
+Requires: app-network-core >= 1:1.5.1
 
 %description core
 The Port Forwarding app makes it possible to allow access to systems on your local network from the Internet.
