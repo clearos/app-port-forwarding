@@ -75,6 +75,7 @@ foreach ($ports as $rule) {
     $state_anchor = 'anchor_' . $state;
 
     $item['title'] = $rule['name'];
+    $item['current_state'] = (bool)$rule['enabled'];
     $item['action'] = '/app/port_forwarding/delete/' . $key;
     $item['anchors'] = button_set(
         array(
@@ -103,6 +104,7 @@ foreach ($ranges as $rule) {
     $state_anchor = 'anchor_' . $state;
 
     $item['title'] = $rule['name'];
+    $item['current_state'] = (bool)$rule['enabled'];
     $item['action'] = '/app/port_forwarding/delete_range/' . $key;
     $item['anchors'] = button_set(
         array(
@@ -127,7 +129,10 @@ foreach ($ranges as $rule) {
 
 sort($items);
 
-$options['default_rows'] = 50;
+$options = array (
+    'default_rows' => 50,
+    'row-enable-disable' => TRUE
+);
 
 echo summary_table(
     lang('port_forwarding_port_forwarding'),
