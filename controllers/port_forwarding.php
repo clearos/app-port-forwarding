@@ -103,21 +103,21 @@ class Port_Forwarding extends ClearOS_Controller
 
         if ($this->input->post('submit_standard')) {
             $this->form_validation->set_policy('service', 'port_forwarding/Port_Forwarding', 'validate_service', TRUE);
-            $this->form_validation->set_policy('service_ip', 'port_forwarding/Port_Forwarding', 'validate_address', TRUE);
+            $this->form_validation->set_policy('service_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
             $is_action = TRUE;
         } else if ($this->input->post('submit_port')) {
             $this->form_validation->set_policy('port_nickname', 'port_forwarding/Port_Forwarding', 'validate_name', TRUE);
             $this->form_validation->set_policy('port_protocol', 'port_forwarding/Port_Forwarding', 'validate_protocol', TRUE);
             $this->form_validation->set_policy('port_from', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
             $this->form_validation->set_policy('port_to', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
-            $this->form_validation->set_policy('port_ip', 'port_forwarding/Port_Forwarding', 'validate_address', TRUE);
+            $this->form_validation->set_policy('port_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
             $is_action = TRUE;
         } else if ($this->input->post('submit_range')) {
             $this->form_validation->set_policy('range_nickname', 'port_forwarding/Port_Forwarding', 'validate_name', TRUE);
             $this->form_validation->set_policy('range_protocol', 'port_forwarding/Port_Forwarding', 'validate_protocol', TRUE);
             $this->form_validation->set_policy('range_start', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
             $this->form_validation->set_policy('range_end', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
-            $this->form_validation->set_policy('range_ip', 'port_forwarding/Port_Forwarding', 'validate_address', TRUE);
+            $this->form_validation->set_policy('range_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
             $is_action = TRUE;
 
             // TODO - Firewall class needs fixing for validating port and port ranges
