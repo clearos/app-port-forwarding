@@ -118,8 +118,8 @@ class Port_Forwarding extends Firewall
 
         Validation_Exception::is_valid($this->validate_name($name));
         Validation_Exception::is_valid($this->validate_protocol($protocol));
-        Validation_Exception::is_valid($this->validate_port($from_port));
-        Validation_Exception::is_valid($this->validate_port($to_port));
+        Validation_Exception::is_valid($this->validate_single_port($from_port));
+        Validation_Exception::is_valid($this->validate_single_port($to_port));
         Validation_Exception::is_valid($this->validate_address($to_ip));
 
         $rule = new Rule();
@@ -155,8 +155,8 @@ class Port_Forwarding extends Firewall
 
         Validation_Exception::is_valid($this->validate_name($name));
         Validation_Exception::is_valid($this->validate_protocol($protocol));
-        Validation_Exception::is_valid($this->validate_port($low_port));
-        Validation_Exception::is_valid($this->validate_port($high_port));
+        Validation_Exception::is_valid($this->validate_single_port($low_port));
+        Validation_Exception::is_valid($this->validate_single_port($high_port));
         Validation_Exception::is_valid($this->validate_address($to_ip));
 
         $rule = new Rule();
@@ -569,4 +569,28 @@ class Port_Forwarding extends Firewall
 
         $this->_add_rule($rule);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // V A L I D A T I O N   R O U T I N E S
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Validation routine for integer port address.
+     *
+     * @param integer $port numeric port address
+     *
+     * @return boolean TRUE if port is valid
+     */
+
+    public function validate_single_port($port)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+        // TODO Validation routine in firewall for port allows ranges (eg. 1000:1010)
+        // Port Forward rules created using some forms requires single port
+        // See tracker http://tracker.clearfoundation.com/view.php?id=1475
+
+        if (!is_numeric($port))
+            return lang('firewall_port_invalid');
+    }
+
 }

@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'port_forwarding';
-$app['version'] = '1.5.5';
+$app['version'] = '1.5.6';
 $app['release'] = '1';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
@@ -30,7 +30,7 @@ $app['requires'] = array(
 );
 
 $app['core_requires'] = array(
-    'app-firewall-core >= 1:1.4.15',
+    'app-firewall-core >= 1:1.5.19',
     'app-network-core >= 1:1.5.1',
 );
 

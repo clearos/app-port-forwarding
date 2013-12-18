@@ -67,6 +67,7 @@ class Port_Forwarding extends ClearOS_Controller
             $data['ranges'] = $this->port_forwarding->get_port_ranges();
             $data['pptp'] = $this->port_forwarding->get_pptp_server();
             $data['network_mode'] = $this->network->get_mode();
+            $data['panic'] = $this->port_forwarding->is_panic();
         } catch (Exception $e) {
             $this->page->view_exception($e);
             return;
@@ -108,15 +109,15 @@ class Port_Forwarding extends ClearOS_Controller
         } else if ($this->input->post('submit_port')) {
             $this->form_validation->set_policy('port_nickname', 'port_forwarding/Port_Forwarding', 'validate_name', TRUE);
             $this->form_validation->set_policy('port_protocol', 'port_forwarding/Port_Forwarding', 'validate_protocol', TRUE);
-            $this->form_validation->set_policy('port_from', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
-            $this->form_validation->set_policy('port_to', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
+            $this->form_validation->set_policy('port_from', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
+            $this->form_validation->set_policy('port_to', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
             $this->form_validation->set_policy('port_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
             $is_action = TRUE;
         } else if ($this->input->post('submit_range')) {
             $this->form_validation->set_policy('range_nickname', 'port_forwarding/Port_Forwarding', 'validate_name', TRUE);
             $this->form_validation->set_policy('range_protocol', 'port_forwarding/Port_Forwarding', 'validate_protocol', TRUE);
-            $this->form_validation->set_policy('range_start', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
-            $this->form_validation->set_policy('range_end', 'port_forwarding/Port_Forwarding', 'validate_port', TRUE);
+            $this->form_validation->set_policy('range_start', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
+            $this->form_validation->set_policy('range_end', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
             $this->form_validation->set_policy('range_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
             $is_action = TRUE;
 

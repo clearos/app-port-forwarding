@@ -43,6 +43,9 @@ $this->lang->load('base');
 // Warnings
 ///////////////////////////////////////////////////////////////////////////////
 
+if ($panic)
+    $this->load->view('firewall/panic');
+
 if ($network_mode == Network::MODE_TRUSTED_STANDALONE)
     $this->load->view('network/firewall_verify');
 
