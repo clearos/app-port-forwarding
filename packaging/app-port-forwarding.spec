@@ -1,7 +1,7 @@
 
 Name: app-port-forwarding
 Epoch: 1
-Version: 1.5.6
+Version: 1.6.0
 Release: 1%{dist}
 Summary: Port Forwarding
 License: GPLv3
@@ -20,7 +20,7 @@ Summary: Port Forwarding - Core
 License: LGPLv3
 Group: ClearOS/Libraries
 Requires: app-base-core
-Requires: app-firewall-core >= 1:1.5.19
+Requires: app-firewall >= 1:1.5.19
 Requires: app-network-core >= 1:1.5.1
 
 %description core
