@@ -7,7 +7,7 @@
  * @package    port-forwarding
  * @subpackage views
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2015 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -65,7 +65,14 @@ $headers = array(
 // Anchors 
 ///////////////////////////////////////////////////////////////////////////////
 
-$anchors = array(anchor_add('/app/port_forwarding/add'));
+$anchors = anchor_multi(
+    array (
+        'port_forwarding/service' => lang('base_add_by') . ': ' . lang('firewall_service'),
+        'port_forwarding/port' => lang('base_add_by') . ': ' . lang('firewall_port'),
+        'port_forwarding/port_range' => lang('base_add_by') . ': ' . lang('firewall_port_range')
+    ),
+    lang('base_add')
+);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Ports
@@ -134,6 +141,7 @@ sort($items);
 
 $options = array (
     'default_rows' => 50,
+    'responsive' => array(1 => 'none', 4 => 'none'),
     'row-enable-disable' => TRUE
 );
 

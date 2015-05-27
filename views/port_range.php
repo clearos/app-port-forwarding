@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Port forwarding add rule view.
+ * Port forwarding add rule by port range view.
  *
  * @category   apps
  * @package    port-forwarding
  * @subpackage views
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011 ClearFoundation
+ * @copyright  2011-2015 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -36,54 +36,7 @@
 $this->lang->load('base');
 $this->lang->load('firewall');
 
-///////////////////////////////////////////////////////////////////////////////
-// Standard service
-///////////////////////////////////////////////////////////////////////////////
-
-echo form_open('port_forwarding/add');
-echo form_header(lang('firewall_standard_service'));
-
-echo field_simple_dropdown('service', $services, $service, lang('firewall_service'));
-echo field_input('service_ip', $service_ip, lang('firewall_ip_address'));
-
-echo field_button_set(
-    array(
-        form_submit_add('submit_standard', 'high'),
-        anchor_cancel('/app/port_forwarding')
-    )
-);
-
-echo form_footer();
-echo form_close();
-
-///////////////////////////////////////////////////////////////////////////////
-// Port
-///////////////////////////////////////////////////////////////////////////////
-
-echo form_open('port_forwarding/add');
-echo form_header(lang('firewall_port'));
-
-echo field_input('port_nickname', $port_nickname, lang('firewall_nickname'));
-echo field_simple_dropdown('port_protocol', $protocols, $port_protocol, lang('firewall_protocol'));
-echo field_input('port_from', $port, lang('firewall_from_port'));
-echo field_input('port_to', $port, lang('firewall_to_port'));
-echo field_input('port_ip', $port_ip, lang('firewall_ip_address'));
-
-echo field_button_set(
-    array(
-        form_submit_add('submit_port', 'high'),
-        anchor_cancel('/app/port_forwarding')
-    )
-);
-
-echo form_footer();
-echo form_close();
-
-///////////////////////////////////////////////////////////////////////////////
-// Port range
-///////////////////////////////////////////////////////////////////////////////
-
-echo form_open('port_forwarding/add');
+echo form_open('port_forwarding/port_range');
 echo form_header(lang('firewall_port_range'));
 
 echo field_input('range_nickname', $range_nickname, lang('firewall_nickname'));

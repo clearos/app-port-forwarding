@@ -7,7 +7,7 @@
  * @package    port-forwarding
  * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011-2013 ClearFoundation
+ * @copyright  2011-2015 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -40,7 +40,7 @@
  * @package    port-forwarding
  * @subpackage controllers
  * @author     ClearFoundation <developer@clearfoundation.com>
- * @copyright  2011-2013 ClearFoundation
+ * @copyright  2011-2015 ClearFoundation
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License version 3 or later
  * @link       http://www.clearfoundation.com/docs/developer/apps/port_forwarding/
  */
@@ -72,123 +72,11 @@ class Port_Forwarding extends ClearOS_Controller
             $this->page->view_exception($e);
             return;
         }
- 
+
         // Load views
         //-----------
 
-        $options['type'] = MY_Page::TYPE_WIDE_CONFIGURATION;
-
-        $this->page->view_form('port_forwarding/summary', $data, lang('port_forwarding_app_name'), $options);
-    }
-
-    /**
-     * Add allow rule.
-     *
-     * @return view
-     */
-
-    function add()
-    {
-        // Load libraries
-        //---------------
-
-        $this->load->library('port_forwarding/Port_Forwarding');
-        $this->lang->load('port_forwarding');
-        $this->lang->load('base');
-        $this->lang->load('firewall');
-
-        // Set validation rules
-        //---------------------
-
-        $is_action = FALSE;
-
-        if ($this->input->post('submit_standard')) {
-            $this->form_validation->set_policy('service', 'port_forwarding/Port_Forwarding', 'validate_service', TRUE);
-            $this->form_validation->set_policy('service_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
-            $is_action = TRUE;
-        } else if ($this->input->post('submit_port')) {
-            $this->form_validation->set_policy('port_nickname', 'port_forwarding/Port_Forwarding', 'validate_name', TRUE);
-            $this->form_validation->set_policy('port_protocol', 'port_forwarding/Port_Forwarding', 'validate_protocol', TRUE);
-            $this->form_validation->set_policy('port_from', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
-            $this->form_validation->set_policy('port_to', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
-            $this->form_validation->set_policy('port_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
-            $is_action = TRUE;
-        } else if ($this->input->post('submit_range')) {
-            $this->form_validation->set_policy('range_nickname', 'port_forwarding/Port_Forwarding', 'validate_name', TRUE);
-            $this->form_validation->set_policy('range_protocol', 'port_forwarding/Port_Forwarding', 'validate_protocol', TRUE);
-            $this->form_validation->set_policy('range_start', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
-            $this->form_validation->set_policy('range_end', 'port_forwarding/Port_Forwarding', 'validate_single_port', TRUE);
-            $this->form_validation->set_policy('range_ip', 'port_forwarding/Port_Forwarding', 'validate_ip', TRUE);
-            $is_action = TRUE;
-
-            // TODO - Firewall class needs fixing for validating port and port ranges
-            // For now, since adding a range seems intuitive to have a separator, make sure
-            // entry is just a single port.
-            if (!preg_match('/^\d+$/', $this->input->post('range_start')) || !preg_match('/^\d+$/', $this->input->post('range_end'))) {
-                $this->page->set_message(lang('port_forwarding_port_range_warning'), 'warning');
-                redirect('/port_forwarding/add');
-            }
-                
-        }
-
-        // Handle form submit
-        //-------------------
-
-        if ($is_action && $this->form_validation->run()) {
-            try {
-                if ($this->input->post('submit_standard')) {
-                    $this->port_forwarding->add_standard_service(
-                        preg_replace('/\//', '_', $this->input->post('service')),
-                        $this->input->post('service'),
-                        $this->input->post('service_ip')
-                    );
-                } else if ($this->input->post('submit_port')) {
-                    $this->port_forwarding->add_port(
-                        $this->input->post('port_nickname'),
-                        $this->input->post('port_protocol'),
-                        $this->input->post('port_from'),
-                        $this->input->post('port_to'),
-                        $this->input->post('port_ip')
-                    );
-                } else if ($this->input->post('submit_range')) {
-                    $this->port_forwarding->add_port_range(
-                        $this->input->post('range_nickname'),
-                        $this->input->post('range_protocol'),
-                        $this->input->post('range_start'),
-                        $this->input->post('range_end'),
-                        $this->input->post('range_ip')
-                    );
-                }
-
-                $this->port_forwarding->reset(TRUE);
-
-                $this->page->set_status_added();
-                redirect('/port_forwarding');
-            } catch (Exception $e) {
-                $this->page->view_exception($e);
-                return;
-            }
-        }
-
-        // Load the view data 
-        //------------------- 
-
-        $data['mode'] = $form_mode;
-        $data['protocols'] = $this->port_forwarding->get_basic_protocols();
-        $services = $this->port_forwarding->get_standard_service_list();
-
-        // TODO: PPTP and IPsec are not supported - a hack below
-
-        $data['services'] = array();
-
-        foreach ($services as $service)
-            if ($service !== 'IPsec')
-                $data['services'][] = $service;
-
-        // Load the views
-        //---------------
-
-        $this->page->view_form('port_forwarding/add', $data, lang('base_add'));
+        $this->page->view_form('port_forwarding/summary', $data, lang('port_forwarding_app_name'));
     }
 
     /**
@@ -256,7 +144,6 @@ class Port_Forwarding extends ClearOS_Controller
 
         try {
             $this->port_forwarding->delete_port($protocol, $from_port, $to_port, $ip);
-            $this->port_forwarding->reset(TRUE);
 
             $this->page->set_status_deleted();
             redirect('/port_forwarding');
@@ -289,7 +176,6 @@ class Port_Forwarding extends ClearOS_Controller
 
         try {
             $this->port_forwarding->delete_port_range($protocol, $low_port, $high_port, $ip);
-            $this->port_forwarding->reset(TRUE);
 
             $this->page->set_status_deleted();
             redirect('/port_forwarding');
@@ -316,7 +202,6 @@ class Port_Forwarding extends ClearOS_Controller
             $this->load->library('port_forwarding/Port_Forwarding');
 
             $this->port_forwarding->set_port_state(FALSE, $protocol, $from_port, $to_port, $ip);
-            $this->port_forwarding->reset(TRUE);
 
             $this->page->set_status_disabled();
             redirect('/port_forwarding');
@@ -343,7 +228,6 @@ class Port_Forwarding extends ClearOS_Controller
             $this->load->library('port_forwarding/Port_Forwarding');
 
             $this->port_forwarding->set_port_range_state(FALSE, $protocol, $low_port, $high_port, $ip);
-            $this->port_forwarding->reset(TRUE);
 
             $this->page->set_status_disabled();
             redirect('/port_forwarding');
@@ -370,7 +254,6 @@ class Port_Forwarding extends ClearOS_Controller
             $this->load->library('port_forwarding/Port_Forwarding');
 
             $this->port_forwarding->set_port_state(TRUE, $protocol, $from_port, $to_port, $ip);
-            $this->port_forwarding->reset(TRUE);
 
             $this->page->set_status_enabled();
             redirect('/port_forwarding');
@@ -397,7 +280,6 @@ class Port_Forwarding extends ClearOS_Controller
             $this->load->library('port_forwarding/Port_Forwarding');
 
             $this->port_forwarding->set_port_range_state(TRUE, $protocol, $low_port, $high_port, $ip);
-            $this->port_forwarding->reset(TRUE);
 
             $this->page->set_status_enabled();
             redirect('/port_forwarding');

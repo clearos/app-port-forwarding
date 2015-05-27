@@ -1,0 +1,4 @@
+#!/bin/sh
+
+logger -p local6.notice -t installer "app-port-forwarding-core - removing Port Forwarding rules on un-install"
+/usr/clearos/apps/port_forwarding/deploy/remove-port-forwarding-rules
