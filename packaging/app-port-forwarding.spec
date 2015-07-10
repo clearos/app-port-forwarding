@@ -1,7 +1,7 @@
 
 Name: app-port-forwarding
 Epoch: 1
-Version: 2.0.19
+Version: 2.1.6
 Release: 1%{dist}
 Summary: Port Forwarding
 License: GPLv3
