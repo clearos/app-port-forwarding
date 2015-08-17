@@ -141,7 +141,7 @@ sort($items);
 
 $options = array (
     'default_rows' => 50,
-    'responsive' => array(1 => 'none', 4 => 'none'),
+    'responsive' => array(1 => 'none', 2 => 'none'),
     'row-enable-disable' => TRUE
 );
 
