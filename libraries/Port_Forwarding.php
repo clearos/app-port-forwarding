@@ -312,6 +312,7 @@ class Port_Forwarding extends Firewall
             $info['protocol'] = $rule->get_protocol();
             $info['protocol_name'] = $rule->get_protocol_name();
             $info['to_ip'] = $rule->get_address();
+            // FIXME: check for uninitialized variables
             $info['service'] = $this->_lookup_service($info['protocol'], $info['to_port']);
 
             // The 1723 is a bit weird, but it makes end users happier
