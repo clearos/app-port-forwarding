@@ -5,8 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'port_forwarding';
-$app['version'] = '2.1.14';
-$app['release'] = '1';
+$app['version'] = '2.5.0';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
 $app['license'] = 'GPLv3';
@@ -26,11 +25,12 @@ $app['subcategory'] = lang('base_subcategory_firewall');
 /////////////////////////////////////////////////////////////////////////////
 
 $app['requires'] = array(
+    'app-firewall',
     'app-network',
 );
 
 $app['core_requires'] = array(
-    'app-firewall >= 1:1.5.19',
+    'app-firewall-core >= 1:1.5.19',
     'app-network-core >= 1:1.5.1',
 );
 

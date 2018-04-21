@@ -1,26 +1,29 @@
 
 Name: app-port-forwarding
 Epoch: 1
-Version: 2.1.14
+Version: 2.5.0
 Release: 1%{dist}
 Summary: Port Forwarding
 License: GPLv3
-Group: ClearOS/Apps
+Group: Applications/Apps
+Packager: ClearFoundation
+Vendor: ClearFoundation
 Source: %{name}-%{version}.tar.gz
 Buildarch: noarch
 Requires: %{name}-core = 1:%{version}-%{release}
 Requires: app-base
+Requires: app-firewall
 Requires: app-network
 
 %description
 The Port Forwarding app makes it possible to allow access to systems on your local network from the Internet.
 
 %package core
-Summary: Port Forwarding - Core
+Summary: Port Forwarding - API
 License: LGPLv3
-Group: ClearOS/Libraries
+Group: Applications/API
 Requires: app-base-core
-Requires: app-firewall >= 1:1.5.19
+Requires: app-firewall-core >= 1:1.5.19
 Requires: app-network-core >= 1:1.5.1
 
 %description core
@@ -73,6 +76,7 @@ exit 0
 %files core
 %defattr(-,root,root)
 %exclude /usr/clearos/apps/port_forwarding/packaging
+%exclude /usr/clearos/apps/port_forwarding/unify.json
 %dir /usr/clearos/apps/port_forwarding
 /usr/clearos/apps/port_forwarding/deploy
 /usr/clearos/apps/port_forwarding/language
